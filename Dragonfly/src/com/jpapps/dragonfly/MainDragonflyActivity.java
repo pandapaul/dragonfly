@@ -4,8 +4,9 @@ import java.util.Random;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.util.Log;
+import android.graphics.Color;
 import android.view.Menu;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -27,14 +28,15 @@ public class MainDragonflyActivity extends Activity {
 		
 		TableLayout mapTable = (TableLayout) this.findViewById(R.id.gameMapTable);
 		
+		int cellWidthPix = (int) (this.getResources().getDisplayMetrics().widthPixels / cols + 0.5f);
+		
 		int[][] mapArray = generateMapArray(rows, cols);
 		
 		for(int[] row : mapArray) {
 			TableRow tableRow = new TableRow(this);
-			mapTable.addView(tableRow);	
+			mapTable.addView(tableRow, new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));	
 			for(int cell : row) {
 				ImageView cellView = new ImageView(this);
-				tableRow.addView(cellView);
 				if(cell == type_girl) {
 					cellView.setImageResource(R.drawable.girl1);
 				} else if(cell == type_leaf) {
@@ -44,6 +46,7 @@ public class MainDragonflyActivity extends Activity {
 				} else if(cell == type_exit) {
 					cellView.setImageResource(R.drawable.exit1);
 				}
+				tableRow.addView(cellView, new TableRow.LayoutParams(cellWidthPix, cellWidthPix));
 			}
 		}
 	}
@@ -66,19 +69,18 @@ public class MainDragonflyActivity extends Activity {
 		
 		int count = 0;
 		for (int[] row : newMapArray) {
-			for (int cell : row) {
+			for (int c=0; c<row.length; c++) {
 				if(count == girlCell) {
-					cell = type_girl;
+					row[c] = type_girl;
 				} else if(count == exitCell) {
-					cell = type_exit;
+					row[c] = type_exit;
 				} else {
-					if(rando.nextDouble() < 0.5) {
-						cell = type_leaf;
+					if(rando.nextDouble() < 0.6) {
+						row[c] = type_leaf;
 					} else {
-						cell = type_stump;
+						row[c] = type_stump;
 					}
 				}
-				Log.w("Dragonfly", "Cell #" + count + " is type " + cell);
 				count++;
 			}
 		}
