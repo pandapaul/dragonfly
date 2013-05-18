@@ -4,7 +4,6 @@ import java.util.Random;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.graphics.Color;
 import android.view.Menu;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
