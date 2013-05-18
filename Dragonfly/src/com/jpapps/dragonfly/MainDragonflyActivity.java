@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.ImageView;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 
 public class MainDragonflyActivity extends Activity {
 	
-	TableLayout mapTable;
 	int rows = 7;
 	int cols = 5;
 	
@@ -24,13 +25,34 @@ public class MainDragonflyActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_dragonfly);
 		
-		mapTable = (TableLayout) this.findViewById(R.id.gameMapTable);
+		TableLayout mapTable = (TableLayout) this.findViewById(R.id.gameMapTable);
 		
-		generateMapArray();
+		int[][] mapArray = generateMapArray(rows, cols);
+		
+		for(int[] row : mapArray) {
+			TableRow tableRow = new TableRow(this);
+			mapTable.addView(tableRow);	
+			for(int cell : row) {
+				ImageView cellView = new ImageView(this);
+				tableRow.addView(cellView);
+				if(cell == type_girl) {
+					cellView.setImageResource(R.drawable.girl1);
+				} else if(cell == type_leaf) {
+					cellView.setImageResource(R.drawable.leaf1);
+				} else if(cell == type_stump) {
+					cellView.setImageResource(R.drawable.stump1);
+				} else if(cell == type_exit) {
+					cellView.setImageResource(R.drawable.exit1);
+				}
+			}
+		}
+	}
+	
+	private void constructMapTable(TableLayout mapTable) {
 		
 	}
 	
-	protected int[][] generateMapArray() {
+	private int[][] generateMapArray(int rows, int cols) {
 		int[][] newMapArray = new int[rows][cols];
 		
 		Random rando = new Random();
