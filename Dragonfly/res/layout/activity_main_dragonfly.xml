@@ -1,11 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
     tools:context=".MainDragonflyActivity"
     android:orientation="vertical"
-    android:background="@drawable/bg1">
+    android:background="@drawable/bg1"
+    android:id="@+id/main_frames">
 
 	<TableLayout
     	android:id="@+id/gameMapTable"
@@ -15,4 +16,4 @@
         
     </TableLayout>
 
-</LinearLayout>
+</FrameLayout>

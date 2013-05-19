@@ -1,19 +1,30 @@
 package com.jpapps.dragonfly;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.ClipData;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.DragShadowBuilder;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-public class MainDragonflyActivity extends Activity {
+public class MainDragonflyActivity extends Activity implements OnTouchListener {
 	
 	int rows = 7;
-	int cols = 5;
+	int cols = 5; 
+	
+	boolean dragging = false;
+	FrameLayout frameLayout;
 	
 	static final int type_girl = 0;
 	static final int type_leaf = 1;
@@ -24,6 +35,8 @@ public class MainDragonflyActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_dragonfly);
+		
+		frameLayout = (FrameLayout) this.findViewById(R.id.main_frames);
 		
 		TableLayout mapTable = (TableLayout) this.findViewById(R.id.gameMapTable);
 		
@@ -36,22 +49,27 @@ public class MainDragonflyActivity extends Activity {
 			mapTable.addView(tableRow, new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));	
 			for(int cell : row) {
 				ImageView cellView = new ImageView(this);
+				
 				if(cell == type_girl) {
+					cellView.setTag(type_girl);
 					cellView.setImageResource(R.drawable.girl1);
 				} else if(cell == type_leaf) {
+					cellView.setTag(type_leaf);
 					cellView.setImageResource(R.drawable.leaf1);
 				} else if(cell == type_stump) {
+					cellView.setTag(type_stump);
 					cellView.setImageResource(R.drawable.stump1);
 				} else if(cell == type_exit) {
+					cellView.setTag(type_exit);
 					cellView.setImageResource(R.drawable.exit1);
 				}
+				
+				cellView.setOnTouchListener(this);
+				
 				tableRow.addView(cellView, new TableRow.LayoutParams(cellWidthPix, cellWidthPix));
+				Log.w("Dragonfly", "ID = " + cellView.getId());
 			}
 		}
-	}
-	
-	private void constructMapTable(TableLayout mapTable) {
-		
 	}
 	
 	private int[][] generateMapArray(int rows, int cols) {
@@ -91,6 +109,26 @@ public class MainDragonflyActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main_dragonfly, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onTouch(View view, MotionEvent motionEvent) {
+		if(view.getTag().equals(type_leaf)) {
+			if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+				dragging = true;
+				return true;
+			} else if(motionEvent.getAction() == MotionEvent.ACTION_UP){
+				dragging = false;
+				return false;
+			} else if(motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+				if(dragging) {
+					view.setX(motionEvent.getX());
+					view.setY(motionEvent.getY());
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
